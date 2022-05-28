@@ -303,23 +303,23 @@ class TimeRangePickerState extends State<TimeRangePicker>
   void initState() {
     _offsetRad = (widget.clockRotation * pi / 180);
 
-    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance!.addObserver(this);
     setAngles();
-    WidgetsBinding.instance.addPostFrameCallback((_) => setRadius());
+    WidgetsBinding.instance!.addPostFrameCallback((_) => setRadius());
 
     super.initState();
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
+    WidgetsBinding.instance!.removeObserver(this);
     super.dispose();
   }
 
   @override
   void didChangeMetrics() {
     super.didChangeMetrics();
-    WidgetsBinding.instance.addPostFrameCallback((_) => setRadius());
+    WidgetsBinding.instance!.addPostFrameCallback((_) => setRadius());
   }
 
   setRadius() {
@@ -624,6 +624,7 @@ class TimeRangePickerState extends State<TimeRangePicker>
                     children: [
                       if (widget.backgroundWidget != null)
                         widget.backgroundWidget!,
+                      buildCircleHeader(false),
                       buildTimeRange(
                           localizations: localizations, themeData: themeData)
                     ]),
@@ -644,6 +645,7 @@ class TimeRangePickerState extends State<TimeRangePicker>
                           child: Stack(alignment: Alignment.center, children: [
                             if (widget.backgroundWidget != null)
                               widget.backgroundWidget!,
+                            buildCircleHeader(false),
                             buildTimeRange(
                                 localizations: localizations,
                                 themeData: themeData)
@@ -798,6 +800,59 @@ class TimeRangePickerState extends State<TimeRangePicker>
                       TextStyle(
                           color: inactiveColor,
                           fontSize: 28,
+                          fontWeight: FontWeight.bold),
+            ),
+          ])
+        ],
+      ),
+    );
+  }
+
+  Widget buildCircleHeader(bool landscape) {
+    final ThemeData themeData = Theme.of(context);
+
+    Color backgroundColor;
+    switch (themeData.brightness) {
+      case Brightness.light:
+        backgroundColor = themeData.primaryColor;
+        break;
+      case Brightness.dark:
+        backgroundColor = themeData.backgroundColor;
+        break;
+    }
+    // switch (ThemeData.estimateBrightnessForColor(themeData.primaryColor)) {
+    //   case Brightness.light:
+    //     activeColor = Colors.black87;
+    //     inactiveColor = Colors.black54;
+    //     break;
+    //   case Brightness.dark:
+    //     activeColor = Colors.white;
+    //     inactiveColor = Colors.white70;
+    //     break;
+    // }
+
+    return Container(
+      child: Flex(
+        direction: landscape ? Axis.vertical : Axis.horizontal,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Column(children: [
+            Text(widget.fromText, style: TextStyle(color: Colors.black)),
+            Text(
+              MaterialLocalizations.of(context).formatTimeOfDay(_startTime,
+                  alwaysUse24HourFormat: widget.use24HourFormat),
+              style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold)
+            ),
+            Text(widget.toText, style: TextStyle(color: Colors.black)),
+            Text(
+              MaterialLocalizations.of(context).formatTimeOfDay(_endTime,
+                  alwaysUse24HourFormat: widget.use24HourFormat),
+              style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 22,
                           fontWeight: FontWeight.bold),
             ),
           ])
