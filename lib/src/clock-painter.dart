@@ -112,8 +112,8 @@ class ClockPainter extends CustomPainter {
       canvas.drawArc(
           rect, start, sweep, paintingStyle == PaintingStyle.fill, paint);
 
-      drawHandler(paint, canvas, ActiveTime.Start, start);
-      drawHandler(paint, canvas, ActiveTime.End, end);
+      drawHandler(paint, handlerColor, canvas, ActiveTime.Start, start);
+      drawHandler(paint, handlerColor, canvas, ActiveTime.End, end);
     }
 
     drawLabels(
@@ -125,22 +125,38 @@ class ClockPainter extends CustomPainter {
     canvas.restore();
   }
 
-  void drawHandler(Paint paint, Canvas canvas, ActiveTime type, double angle) {
+  void drawHandler(Paint paint, Color handlerColor, Canvas canvas, ActiveTime type, double angle) {
     paint.style = PaintingStyle.fill;
-    paint.color = handlerColor;
+    // Started circle should be white
+    if (type == ActiveTime.Start){
+      paint.color = Colors.white;
+    }
+    // End circle should be designed
+    else{
+      paint.color = handlerColor;
+    }
+    // If the end circle is pressed, then fill it with a common color
     if (activeTime == type) {
       paint.color = selectedColor;
     }
+    // If the start circle is pressed, then fill with white color
+    if (activeTime == type && type == ActiveTime.Start) {
+      paint.color = Colors.white;
+    }
 
     Offset handlerPosition = calcCoords(radius, radius, angle, radius);
-    canvas.drawCircle(handlerPosition, handlerRadius, paint);
+    canvas.drawCircle(handlerPosition, handlerRadius * 2, paint);
 
+    // Making a stroke for the starting circle
     paint.style = PaintingStyle.stroke;
     paint.strokeWidth = 2;
-    canvas.drawCircle(handlerPosition, handlerRadius * 1.5, paint);
 
-    if (type == ActiveTime.Start)
+    if (type == ActiveTime.Start){
+      // Making a stroke for the starting circle
+      paint.color = handlerColor;
+      canvas.drawCircle(handlerPosition, handlerRadius * 2, paint);
       _startHandlerPosition = handlerPosition;
+    }
     else
       _endHandlerPosition = handlerPosition;
   }
