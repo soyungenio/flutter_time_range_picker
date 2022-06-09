@@ -837,21 +837,19 @@ class TimeRangePickerState extends State<TimeRangePicker>
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Column(children: [
-            Text(widget.fromText, style: TextStyle(color: Colors.black)),
+            Text(widget.fromText),
             Text(
               MaterialLocalizations.of(context).formatTimeOfDay(_startTime,
                   alwaysUse24HourFormat: widget.use24HourFormat),
               style: TextStyle(
-                          color: Colors.black,
                           fontSize: 22,
                           fontWeight: FontWeight.bold)
             ),
-            Text(widget.toText, style: TextStyle(color: Colors.black)),
+            Text(widget.toText),
             Text(
               MaterialLocalizations.of(context).formatTimeOfDay(_endTime,
                   alwaysUse24HourFormat: widget.use24HourFormat),
               style: TextStyle(
-                          color: Colors.black,
                           fontSize: 22,
                           fontWeight: FontWeight.bold),
             ),
